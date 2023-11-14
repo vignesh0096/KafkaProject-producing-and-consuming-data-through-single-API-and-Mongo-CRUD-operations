@@ -54,70 +54,36 @@ class KafkaAPIView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class GetData( GenericAPIView ):
+class GetData(GenericAPIView):
     serializer_class = DataSerializer
 
     def get(self, request, pk, **kwargs):
-        model = KafkaData.objects.get( pk=pk )
-        serializer_class = self.serializer_class( model )
-        return Response( serializer_class.data )
+        model = KafkaData.objects.get(pk=pk)
+        serializer_class = self.serializer_class(model)
+        return Response(serializer_class.data)
 
 
-class UpdateData( GenericAPIView ):
+class UpdateData(GenericAPIView):
     serializer_class = DataSerializer
 
     def put(self, request, pk):
         try:
-            query_set = KafkaData.objects.get( pk=pk )
-            serializer_class = self.serializer_class( instance=query_set, data=request.data )
+            query_set = KafkaData.objects.get(pk=pk)
+            serializer_class = self.serializer_class(instance=query_set, data=request.data)
             if serializer_class.is_valid():
                 serializer_class.save()
-                return Response( serializer_class.data )
+                return Response(serializer_class.data)
         except Exception as e:
-            print( 'invalid' )
-            return Response( {"error": str( e )} )
+            print('invalid')
+            return Response({"error": str(e)})
 
 
-class DeleteData( GenericAPIView ):
+class DeleteData(GenericAPIView):
     def delete(self, request, pk):
         try:
-            data = KafkaData.objects.get( pk=pk )
+            data = KafkaData.objects.get(pk=pk)
             data.delete()
-            return Response( {"message": "deleted"} )
+            return Response({"message": "deleted"})
         except Exception as e:
-            print( "invalid", e )
-            return Response( {"error": str( e )} )
-
-# class GetData(RetrieveAPIView):
-#     serializer_class = IdSerializer
-#
-#     def get(self, request,**kwargs):
-#         model = KafkaData.objects.get(id=request.data['id'])
-#         serializer_class = DataSerializer(instance=model,data=request.data)
-#         return Response(serializer_class.data)
-#
-#
-# class UpdateData(UpdateAPIView):
-#     serializer_class = DataSerializer
-#
-#     def put(self, request, *args, **kwargs):
-#         try:
-#             query_set = KafkaData.objects.get(id=request.data['id'])
-#             serializer_class = DataSerializer(instance=query_set, data=request.data)
-#             if serializer_class.is_valid():
-#                 serializer_class.save()
-#                 return Response(serializer_class.data)
-#         except Exception as e:
-#             print('invalid')
-#             return Response({"error": str(e)})
-#
-#
-# class DeleteData(GenericAPIView):
-#     def delete(self, request, pk):
-#         try:
-#             patient = KafkaData.objects.get(pk=pk)
-#             patient.delete()
-#             return Response({"message": "deleted"})
-#         except Exception as e:
-#             print("invalid", e)
-#             return Response({"error": str(e)})
+            print("invalid", e)
+            return Response({"error": str(e)})
